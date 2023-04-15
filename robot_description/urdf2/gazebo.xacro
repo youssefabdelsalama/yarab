@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<robot name="iRobot" xmlns:xacro="https://www.ros.org/wiki/xacro" >
+<gazebo reference="link_chassis">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="link_left_wheel">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="link_right_wheel">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+    <gazebo reference="link_left_wheel_f">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="link_right_wheel_f">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  
+  <gazebo reference="hokuyo_laser_link">
+    <gravity>true</gravity>
+    <sensor name="head_hokuyo_sensor" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.2</min>
+          <max>40</max>
+          <resolution>0.025</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.0</stddev>
+        </noise>
+      </ray>
+      <plugin filename="libgazebo_ros_laser.so" name="gazebo_ros_head_hokuyo_controller">
+        <robotNamespace/>
+        <topicName>laser_scan</topicName>
+        <frameName>hokuyo_laser_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+  
+  
+ 
+
+  <gazebo>
+    <static>false</static>
+    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+      <rosDebugLevel>Debug</rosDebugLevel>
+      <publishWheelTF>false</publishWheelTF>
+      <publishWheelJointState>true</publishWheelJointState>
+      <alwaysOn>true</alwaysOn>
+      <leftJoint>left_wheel_rot_joint</leftJoint>
+      <rightJoint>right_wheel_rot_joint</rightJoint>
+      <wheelSeparation>0.28</wheelSeparation>
+      <wheelDiameter>0.06</wheelDiameter>
+      <torque>20</torque>
+      <wheelAcceleration>1.8</wheelAcceleration>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometrySource>encoder</odometrySource>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <updateRate>10.0</updateRate>
+    </plugin>
+    <plugin filename="libgazebo_ros_joint_state_publisher.so" name="joint_state_publisher">
+      <jointName>left_wheel_rot_joint, right_wheel_rot_joint</jointName>
+      <updateRate>10.0</updateRate>
+      <alwaysOn>true</alwaysOn>
+    </plugin>
+
+  </gazebo>
+</robot>
